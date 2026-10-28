@@ -1,0 +1,4 @@
+# Optional local clone of gentleman-guardian-angel for reference (has its own .git)
+gentleman-guardian-angel/
+
+.DS_Store
