@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# dot-kn-review installer — copies skills/dot-kn-review into Claude Code and/or Cursor skill dirs.
+# dotkn-review installer — copies skills/dotkn-review into Claude Code and/or Cursor skill dirs.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_SRC="$SCRIPT_DIR/skills/dot-kn-review"
+SKILL_SRC="$SCRIPT_DIR/skills/dotkn-review"
 
 usage() {
   cat <<EOF
@@ -61,10 +61,10 @@ targets=()
 
 for target in "${targets[@]}"; do
   mkdir -p "$target"
-  rm -rf "$target/dot-kn-review"
-  cp -R "$SKILL_SRC" "$target/dot-kn-review"
-  echo "installed: $target/dot-kn-review"
+  rm -rf "$target/dotkn-review"
+  cp -R "$SKILL_SRC" "$target/dotkn-review"
+  echo "installed: $target/dotkn-review"
 done
 
 echo
-echo "Done. Try it: open a repo with changes and run /dot-kn-review"
+echo "Done. Try it: open a repo with changes and run /dotkn-review"

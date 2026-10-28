@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# dot-kn-review uninstaller — removes the skill from Claude Code and Cursor skill dirs.
+# dotkn-review uninstaller — removes the skill from Claude Code and Cursor skill dirs.
 set -euo pipefail
 
 project=""
@@ -9,9 +9,9 @@ if [[ "${1:-}" == "--project" ]]; then
 fi
 
 if [[ -n "$project" ]]; then
-  targets=("$project/.claude/skills/dot-kn-review" "$project/.cursor/skills/dot-kn-review")
+  targets=("$project/.claude/skills/dotkn-review" "$project/.cursor/skills/dotkn-review")
 else
-  targets=("$HOME/.claude/skills/dot-kn-review" "$HOME/.cursor/skills/dot-kn-review")
+  targets=("$HOME/.claude/skills/dotkn-review" "$HOME/.cursor/skills/dotkn-review")
 fi
 
 removed=false

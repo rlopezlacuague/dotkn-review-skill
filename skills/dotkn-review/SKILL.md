@@ -1,11 +1,11 @@
 ---
-name: dot-kn-review
+name: dotkn-review
 description: High-signal code review of the current branch or uncommitted changes. Flags only real problems — bugs, logic errors, security vulnerabilities, data loss, broken contracts, concurrency hazards. Never reports formatting, style, or naming nitpicks. Use when the user asks to review their changes, branch, diff, or PR.
 argument-hint: "[base-branch | detail <n>]"
 allowed-tools: Bash(git status:*) Bash(git branch:*) Bash(git log:*) Bash(git diff:*) Bash(git show:*) Bash(git merge-base:*) Bash(git rev-parse:*) Bash(git rev-list:*) Bash(git ls-files:*) Read Grep Glob Write
 ---
 
-# dot-kn-review: high-signal code review
+# dotkn-review: high-signal code review
 
 You are performing a code review whose sole purpose is to catch problems that would matter in production. You are NOT a linter, NOT a style guide, and NOT a mentor. A review with zero findings is a successful review.
 
@@ -15,9 +15,9 @@ Run the git commands below yourself with your terminal tool. Do not ask the user
 
 ## Step 0 — Detail mode
 
-If the invocation asks to expand a previous finding (e.g. `/dot-kn-review detail 2`, "more detail on finding 1"), do NOT re-run the review:
+If the invocation asks to expand a previous finding (e.g. `/dotkn-review detail 2`, "more detail on finding 1"), do NOT re-run the review:
 
-1. Read the saved report at `$(git rev-parse --git-dir)/dot-kn-review-last.md`. If it doesn't exist, say there is no saved review to expand and stop.
+1. Read the saved report at `$(git rev-parse --git-dir)/dotkn-review-last.md`. If it doesn't exist, say there is no saved review to expand and stop.
 2. Re-open the files the requested finding references (code may have changed since the review — say so if it has).
 3. Output an explanation of that finding only, written for someone who read the three-line summary and did not understand it. Explain it the way you would to a teammate, from first principles:
    - Start from what the system actually does — the paths, actors, and data flow involved. Draw a small ASCII diagram when topology matters (request routes, proxies, producers/consumers).
@@ -31,7 +31,7 @@ If the invocation asks to expand a previous finding (e.g. `/dot-kn-review detail
 
 1. Confirm you are in a git repository: `git rev-parse --show-toplevel`. If not, tell the user and stop.
 2. Determine the base branch:
-   - If the user's invocation included a branch name (e.g. `/dot-kn-review develop`), use it as the base.
+   - If the user's invocation included a branch name (e.g. `/dotkn-review develop`), use it as the base.
    - Otherwise auto-detect: use the first of `main`, `master`, `develop` that exists (check each with `git rev-parse --verify --quiet <name>`). If none exists locally, try `origin/main`, `origin/master`, `origin/develop`.
    - If no base can be found, ask the user which branch to compare against and stop.
 3. `git branch --show-current` — note the current branch. If the current branch IS the base branch, skip branch mode: review uncommitted changes only.
@@ -106,7 +106,7 @@ These findings must be resolvable once, not re-litigated on every PR. Before fla
 **The chat report is a summary, not an essay.** Each finding gets at most three lines: one severity/file:line/title line, one or two sentences of concrete failure, one sentence of fix. No code snippets, no evidence narration, no "I checked X and Y" — all of that goes into the saved detail file (Step 6), reachable via `detail <n>`.
 
 ```markdown
-# dot-kn-review: <branch> vs <base>        (or: uncommitted changes)
+# dotkn-review: <branch> vs <base>        (or: uncommitted changes)
 
 STATUS: FAILED
 
@@ -121,7 +121,7 @@ Reviewed <N> files, <M> changed lines. <one-sentence overall summary>
 ...
 
 ---
-💡 Don't fully understand a finding? Run `/dot-kn-review detail <n>` and I'll explain it in depth — how the failure happens, why tests don't catch it, and how to fix it.
+💡 Don't fully understand a finding? Run `/dotkn-review detail <n>` and I'll explain it in depth — how the failure happens, why tests don't catch it, and how to fix it.
 ```
 
 Always end the chat report with that tip line (adjust `<n>` examples to real finding numbers when there are findings; omit the tip only when there were no findings).
@@ -139,7 +139,7 @@ Three more rules that apply to every finding:
 If there are no findings:
 
 ```markdown
-# dot-kn-review: <branch> vs <base>
+# dotkn-review: <branch> vs <base>
 
 STATUS: PASSED
 
@@ -159,6 +159,6 @@ Never suggest style rules. If nothing durable emerged, omit the section entirely
 
 ## Step 6 — Persist the full report
 
-After printing the chat report, write the FULL version to `$(git rev-parse --git-dir)/dot-kn-review-last.md` (inside the git dir, so it can never be committed; worktree-safe). Write it on PASSED runs too.
+After printing the chat report, write the FULL version to `$(git rev-parse --git-dir)/dotkn-review-last.md` (inside the git dir, so it can never be committed; worktree-safe). Write it on PASSED runs too.
 
 The full version has the same header, STATUS line, and findings — but each finding additionally carries a **Detail:** block with everything you kept out of chat: the evidence chain (files read, what they show), the step-by-step failure scenario, code snippets, and the concrete verification or fix. This file is what Step 0 (detail mode) reads, so put into it everything a follow-up question would need.

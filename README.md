@@ -1,6 +1,6 @@
-# dot-kn-review
+# dotkn-review
 
-A high-signal code-review skill for **Claude Code** and **Cursor**. Run `/dot-kn-review` on a branch (or on uncommitted changes) and get back only the findings that matter: bugs, logic errors, security vulnerabilities, data loss, broken contracts, concurrency hazards.
+A high-signal code-review skill for **Claude Code** and **Cursor**. Run `/dotkn-review` on a branch (or on uncommitted changes) and get back only the findings that matter: bugs, logic errors, security vulnerabilities, data loss, broken contracts, concurrency hazards.
 
 **It will never nag you about formatting, import order, naming, missing docstrings, or anything a linter would catch.** A review with zero findings is a successful review — the skill is explicitly instructed that unsure ≠ finding.
 
@@ -31,9 +31,9 @@ Uninstall with `./uninstall.sh` (or `./uninstall.sh --project <path>`).
 Standing on a branch with code changes, in Claude Code or Cursor agent chat:
 
 ```
-/dot-kn-review                 # auto-detects base (main > master > develop)
-/dot-kn-review develop         # explicit base branch
-/dot-kn-review detail 2        # expand finding #2 from the last review (no re-run)
+/dotkn-review                 # auto-detects base (main > master > develop)
+/dotkn-review develop         # explicit base branch
+/dotkn-review detail 2        # expand finding #2 from the last review (no re-run)
 ```
 
 What it reviews, auto-detected:
@@ -46,7 +46,7 @@ What it reviews, auto-detected:
 The chat report is deliberately short — three lines per finding:
 
 ```markdown
-# dot-kn-review: feature/checkout vs main
+# dotkn-review: feature/checkout vs main
 
 STATUS: FAILED
 
@@ -61,10 +61,10 @@ Reviewed 7 files, 412 changed lines. Two real bugs in the payment path; everythi
 `if (!isAdmin)` grants access to non-admins on the settings route. Fix: drop the negation and add a 403 test.
 
 ---
-💡 Don't fully understand a finding? Run `/dot-kn-review detail <n>` and I'll explain it in depth.
+💡 Don't fully understand a finding? Run `/dotkn-review detail <n>` and I'll explain it in depth.
 ```
 
-The full report (evidence chain, failure walkthroughs, code snippets) is saved to `<git-dir>/dot-kn-review-last.md` — inside `.git`, so it can never be committed. `/dot-kn-review detail <n>` reads it and expands one finding without re-running the review.
+The full report (evidence chain, failure walkthroughs, code snippets) is saved to `<git-dir>/dotkn-review-last.md` — inside `.git`, so it can never be committed. `/dotkn-review detail <n>` reads it and expands one finding without re-running the review.
 
 ### The STATUS contract
 
@@ -75,11 +75,11 @@ The report always contains `STATUS: PASSED` or `STATUS: FAILED` within its first
 
 ## CI gate
 
-Interactively, `STATUS: FAILED` is advisory — nothing stops a merge. To make it blocking, run the review headlessly in CI and fail the pipeline unless the verdict is PASSED. Install the skill into the repo once (`./install.sh --project <repo>` and commit `.claude/skills/dot-kn-review/`), then:
+Interactively, `STATUS: FAILED` is advisory — nothing stops a merge. To make it blocking, run the review headlessly in CI and fail the pipeline unless the verdict is PASSED. Install the skill into the repo once (`./install.sh --project <repo>` and commit `.claude/skills/dotkn-review/`), then:
 
 ```yaml
-# .github/workflows/dot-kn-review.yml
-name: dot-kn-review
+# .github/workflows/dotkn-review.yml
+name: dotkn-review
 on: pull_request
 
 jobs:
@@ -97,13 +97,13 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          claude -p "/dot-kn-review origin/${{ github.base_ref }}" \
+          claude -p "/dotkn-review origin/${{ github.base_ref }}" \
             --allowedTools "Bash(git:*)" "Read" "Grep" "Glob" "Write" \
             | tee review.md
           head -15 review.md | grep -q "STATUS: PASSED"
 ```
 
-The last line is the entire gate: the verdict must appear as `STATUS: PASSED` within the first 15 lines of the report, matched by substring — the same contract gentleman-guardian-angel uses, so any runner (Cursor CLI: `cursor-agent -p "/dot-kn-review origin/main" --trust`, a pre-push hook, another CI system) can gate the same way. `tee review.md` keeps the full report as a build artifact for the humans reading the failure.
+The last line is the entire gate: the verdict must appear as `STATUS: PASSED` within the first 15 lines of the report, matched by substring — the same contract gentleman-guardian-angel uses, so any runner (Cursor CLI: `cursor-agent -p "/dotkn-review origin/main" --trust`, a pre-push hook, another CI system) can gate the same way. `tee review.md` keeps the full report as a build artifact for the humans reading the failure.
 
 ## Project rules
 
@@ -116,10 +116,10 @@ The review also helps the rules improve over time: when a finding reveals someth
 ## Layout
 
 ```
-skills/dot-kn-review/SKILL.md                       # the entire product (portable Agent Skills format)
-skills/dot-kn-review/references/worked-examples.md  # classification precedents the skill consults
+skills/dotkn-review/SKILL.md                      # the entire product (portable Agent Skills format)
+skills/dotkn-review/references/worked-examples.md # classification precedents the skill consults
 install.sh / uninstall.sh
-CURSOR_SKILL_DESIGN.md                              # original design/analysis notes (GGA → skill port)
+CURSOR_SKILL_DESIGN.md                             # original design/analysis notes (GGA → skill port)
 ```
 
 ## License
